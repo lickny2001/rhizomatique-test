@@ -1,0 +1,164 @@
+show from page title field:
+<?= $page->title ?>
+
+$t = $templates->get("skyscraper");
+echo $t->id;<br>
+
+
+$skyscrapers = $pages->find("template=skyscraper, sort=-modified");
+foreach($skyscrapers as $skyscraper) {
+    echo "<li><a href='$skyscraper->url'>$skyscraper->title</a></li>";
+}
+
+
+<img src="<?php echo $pages->get("/rite/rite1/")->sk_main_image->url; ?>">
+	<h1><?php echo $title; ?></h1>
+	<h1><?php echo $text; ?></h1>
+
+
+foreach($page->images as $image) {
+  echo "<img src='$image->url'>";
+}
+
+
+===============================================================================================================
+path to image on remote server
+http://rhizomatique.org/wp-content/uploads/2016/10/IMG_3542-1_white_200dpi_plate_small-1920x960.png
+
+===============================================================================================================
+googlespread sheet test working
+https://spreadsheets.google.com/feeds/list/1rL5rRu6oIXwGeijlOmwYeXnUJ5auSpON8Icbog_M0E4/1/public/values?alt=json
+
+<?php
+// Parsing this spreadsheet: https://spreadsheets.google.com/pub?key=0Ah0xU81penP1dFNLWk5YMW41dkcwa1JNQXk3YUJoOXc&hl=en&output=html
+$url = 'https://spreadsheets.google.com/feeds/list/1rL5rRu6oIXwGeijlOmwYeXnUJ5auSpON8Icbog_M0E4/1/public/values?alt=json';
+$file= file_get_contents($url);
+$json = json_decode($file);
+$rows = $json->{'feed'}->{'entry'};
+foreach($rows as $row) {
+  echo '<p>';
+  $title = $row->{'gsx$title'}->{'$t'};
+  $temp = $row->{'gsx$temp'}->{'$t'};
+  $h2o = $row->{'gsx$h2o'}->{'$t'};
+  $nacl = $row->{'gsx$nacl'}->{'$t'};
+  $lumen = $row->{'gsx$lumen'}->{'$t'};
+  $period = $row->{'gsx$period'}->{'$t'};
+  $quantity = $row->{'gsx$quantity'}->{'$t'};
+  echo $title . ' |' . ' temp: ' . $temp . ' | h2o: ' . $h2o . ' etc ... <br>';
+  echo '</p>';
+}
+// See this here: http://imagine-it.org/google/spreadsheets/showspreadsheet.php
+?>
+
+
+<!-- below not working ... -->
+/* SFG: getting to google spreadsheet */
+function insertGoogle() {
+$url = 'https://spreadsheets.google.com/feeds/list/1rL5rRu6oIXwGeijlOmwYeXnUJ5auSpON8Icbog_M0E4/1/public/values?alt=json';
+$file= file_get_contents($url);
+$json = json_decode($file);
+$rows = $json->{'feed'}->{'entry'};
+
+$identifierpage = $pages->find('template=sk-rites')->title;
+$identifiersheet = $row->{'gsx$title'}->{'$t'};
+	if ($identifierpage == $identifiersheet) {
+
+	foreach($rows as $row) {
+	  echo '<p>';
+	  $title = $row->{'gsx$title'}->{'$t'};
+	  $temp = $row->{'gsx$temp'}->{'$t'};
+	  $h2o = $row->{'gsx$h2o'}->{'$t'};
+	  $nacl = $row->{'gsx$nacl'}->{'$t'};
+	  $lumen = $row->{'gsx$lumen'}->{'$t'};
+	  $period = $row->{'gsx$period'}->{'$t'};
+	  $quantity = $row->{'gsx$quantity'}->{'$t'};
+	  echo $title . ' |' . ' temp: ' . $temp . ' | h2o: ' . $h2o . ' etc ... <br>';
+	  echo '</p>';
+	}
+	}
+}
+
+
+===============================================================================================================
+skyscraper example 
+http://demo.processwire.com/admin/page/
+http://demo.processwire.com/about/
+===============================================================================================================
+https://processwire.com/api/variables/pages/
+===============================================================================================================
+connect to server using wireHTTP
+$data = array(
+  'username' => 'ryan',
+  'pass' => 'mypass', 
+  'email' => 'info@grab.pw' 
+  ); 
+
+$http = new WireHttp();
+
+$result = $http->post('http://www.domain.com/path/to/service/', $data); 
+
+if($result) {
+  $result = json_decode($result, true); 
+  if($result['status'] == 'success') echo "Success! $result[message]";
+    else echo "Error! $result[message]";
+} else {
+  echo "error posting data";
+}
+===============================================================================================================
+
+
+===============================================================================================================
+pagify.js simple script to create spa with pw ... not working cause no pages in home directory ...
+https://processwire.com/talk/topic/9484-new-site-personal-page-folio/
+http://www.bytemuse.com/Pagify#about_p
+
+
+    <script type='text/javascript'>
+      $(document).ready(function() {
+        $('#page_holder').pagify({
+          pages: ['home', 'rites', 'journals'],
+          animation: 'fadeIn',
+          'default': 'about',
+          cache: true
+        });
+      });
+    </script>
+
+===============================================================================================================
+obsolete code show images foreach loop
+<?php 
+	foreach($images as $image) {
+		$image_url = $image->width(150)->url;
+?>
+	<p><img src="<?php echo $image_url; ?>" alt="Image" /></p>
+<?php 
+	}
+ ?>
+
+=============================================================================================================== 
+outputs value of sk_cb_textlight & sk_cb_fullwidth checkbox to use to change textcolor & fullwidth card	
+<?php 
+	if($items->eq($n)->sk_cb_textlight !=1 ) { echo '0';} else {
+	echo '1';}
+	if($items->eq($n)->sk_cb_fullwidth !=1 ) { echo '0';} else {
+	echo '1';
+	}
+	if($items->eq($n)->sk_cb_textlight !=1 ) { 
+		$textlight = '';
+	} else {
+		$textlight = ' textlight';
+	}
+	if($items->eq($n)->sk_cb_fullwidth !=1 ) { 
+		$fullwidth = '';
+	} else {
+		$fullwidth = ' fullwidth';
+	}
+?>
+
+=============================================================================================================== 
+search form source code:
+https://processwire.com/talk/topic/12883-ajax-autocomplete-search-using-jquery-typehead/
+https://processwire.com/talk/topic/3583-filter-results-of-selector-using-selectcheckbox/?page=2
+https://gist.github.com/outflux3/5690423
+autocomplete search code:
+https://processwire.com/talk/topic/874-autocomplete-and-other-search-enhancements/
